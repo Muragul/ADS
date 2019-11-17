@@ -1,87 +1,133 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 vector <int> a;
 
-class MinHeap{
+class Heap{
     public:
-    int sz;
+    int size;
     
-    MinHeap(){
-        sz = 0;
+    Heap(){
+        size = 0;
     }
 
-    int parent (int i){
+    int Parent (int i){
         return (i-1)/2;
     }
-    int left (int i){
+    int Left (int i){
         return 2*i+1;
     }
-    int right (int i){
+    int Right (int i){
         return 2*i+2;
-    }
-    int getMin(){
-        return a[0];
     }
 
     void insert (int k){
-        sz++;
+        size++;
         a.push_back(k);
-        int i = sz-1;
-        while (i>0 && a[parent(i)]>a[i]){
-            swap(a[parent(i)], a[i]);
-            i = parent(i);
-        }
     }
 
-    void heapify(int i){
-        if (left(i)>sz-1)return;
-        int j = left(i);
-        if (a[j]>a[right(i)] && right(i)<sz)
-        j = right(i);
-        if (a[i]>a[j]){
-            swap(a[i], a[j]);
+        void heapify(int i){
+        if (Left(i)>size - 1)return;
+        int j = Left(i);
+        if (a[j]<a[Right(i)])j = Right(i);
+        if (a[i]<a[j]){
+            swap(a[i],a[j]);
             heapify(j);
+        };
+    }
+    int incKey(int j, int new_value){
+        int i = j - 1;
+        a[i] += new_value;
+        while (i>0 && a[Parent(i)]<a[i]){
+            swap(a[Parent(i)], a[i]);
+            i = Parent(i);
         }
+        return i + 1;
     }
-
-    void extractMin(){
-        swap(a[0], a[sz-1]);
-        sz--;
-        heapify(0);
+    void Print(){
+        for (int i=0;i<size;i++)
+            cout<<a[i]<<" ";
     }
-
-    void decKey(int i, int new_value){
-        a[i] = new_value;
-        while (i>0 && a[parent(i)]>a[i]){
-            swap(a[i], a[parent(i)]);
-            i = parent(i);
-        }
-    }
-
-    void incKey(int i, int new_value){
-        a[i] = new_value;
-        heapify(i);
-    }
-
-    void print(){
-        for (int i=0;i<sz;i++)
-        cout<<a[i]<<" ";
-    }
-
 
 };
 
 int main(){
-    MinHeap *minHeap = new MinHeap();
+    Heap *heap = new Heap();
     int n,k;
     cin>>n;
     for (int i=0;i<n;i++){
         cin>>k;
-        minHeap->insert(k);
+        heap->insert(k);
     }
-    minHeap->print();
-    return 0;
+    int a,b,c;
+    cin>>a;
+    for (int i=0;i<a;i++){
+        cin>>b>>c;
+        cout<<heap->incKey(b,c)<<endl;
+    }
+    heap->Print();
+
 }
+//the inverse
+// #include <iostream>
+
+// using namespace std;
+
+// void out_array(int *a, int n) {
+//  for (int i = 1; i <= n; i++) {
+//   printf("%d%c", a[i], " \n"[i == n]);
+//  }
+// }
+
+// int heapify_down(int *a, int n, int v) {
+//  while (v <= n) {
+//   int l = 2 * v; // left son
+//   int r = 2 * v + 1; // right son
+//   int s = v; // max among a[v],a[l],a[r]
+
+//   /* let's find max */
+//   if (l <= n && a[l] > a[s])
+//    s = l;
+//   if (r <= n && a[r] > a[s])
+//    s = r;
+
+//   // if v is max, then everything is ok
+//   if (s == v) break;
+//   // go down to vertex s
+//   swap(a[v], a[s]);
+//   v = s;
+//  }
+//  return v;
+// }
+
+
+// // these variables are lower than functions,
+// // so functions can't see them
+// int a[100005], n;
+
+// int main() {
+
+//  /*
+//   problem from
+//   https://informatics.msk.ru/mod/statements/view3.php?id=1234&chapterid=1165#1
+//  */
+
+//  scanf("%d", &n);
+//  for (int i = 1; i <= n; i++) {
+//   scanf("%d", a + i);
+//  }
+//  int q;
+//  scanf("%d", &q);
+//  for (int i = 1; i <= q; i++) {
+//   int pos, x;
+//   scanf("%d %d", &pos, &x);
+//   a[pos] -= x;
+//   int newPos = heapify_down(a, n, pos);
+//   printf("%d\n", newPos);
+//  }
+//  out_array(a, n);
+
+
