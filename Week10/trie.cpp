@@ -5,11 +5,11 @@ using namespace std;
 class Node {
     public:
     char data;
-    Node *ch[26];
+    Node *ch[10];
 
     Node(char data){
         this->data = data;
-        for (int i=0;i<26;i++)
+        for (int i=0;i<10;i++)
             this->ch[i] = NULL;
     }
 };
@@ -24,30 +24,22 @@ class Trie {
         cnt = 0;
     }
 
-    void insert (string s){
+    void insert (char a, chas s){
         Node *cur = root;
-        for (int i=0;i<s.size();i++){
-            if (cur->ch[s[i]-'a']!=NULL)
-                cur=cur->ch[s[i]-'a'];
-            else
-            {
-                Node *node = new Node(s[i]);
-                cur->ch[s[i]-'a'] = node;
+            Node *node = new Node(s);
+            cur->ch[a-'a']->ch[s-'a'] = node;
                 cur = node;
                 cnt++;
-            }
-            
-        }
     }
 };
 
 int main(){
-    string s;
-    cin>>s;
+    int n,m;
+    char a,b;
     Trie *trie = new Trie();
-    for (int i=0;i<s.size();i++){
-        string s1 = s.substr(i);
-        trie->insert(s1);
+    for (int i=0;i<m;i++){
+        cin>>a,b;
+        trie->insert(a,b);
     }
     cout<<trie->cnt;
     return 0;
